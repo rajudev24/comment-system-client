@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import Comment from "../components/Comment";
-import { useState } from "react";
+
+import { useSelector } from "react-redux";
 
 export default function Home() {
-  const [isLogin, setLogin] = useState(false);
-  console.log(setLogin);
+  const user = useSelector((state) => state.user);
+
   return (
     <div className=" flex justify-center content-center">
       <div>
@@ -12,7 +13,7 @@ export default function Home() {
           Welcome to Techzu Busniess World!!
         </h1>
         <img width={500} src="/img/techzu.jpg" alt="" />
-        {isLogin ? (
+        {user ? (
           <Comment />
         ) : (
           <h1 className="mt-2 text-lg">

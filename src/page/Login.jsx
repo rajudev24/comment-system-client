@@ -1,31 +1,37 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useLoginUserMutation } from "../redux/api/userApiSlice";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/user/userSlice";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [logUser] = useLoginUserMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+    const data = {
+      email,
+      password,
+    };
     try {
-      const response = await fetch("YOUR_API_ENDPOINT", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      toast.success("Success Notification !", {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      console.log(data); // Handle the response from the API here
+      const resultAction = await logUser(data);
+      if (resultAction.data.statusCode === 200) {
+        toast.success(resultAction.data.message);
+        localStorage.setItem(
+          "access_token",
+          resultAction.data.data.accessToken
+        );
+        dispatch(setUser(data));
+        navigate("/");
+      }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Login failed:", error);
     }
   };
 

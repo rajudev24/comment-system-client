@@ -1,33 +1,35 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRegisterUserMutation } from "../redux/api/userApiSlice";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-
+  const [addUser, { isError, isLoading }] = useRegisterUserMutation();
+  const navigate = useNavigate();
+  console.log(isError, isLoading);
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    const data = {
+      fullName: name,
+      email,
+      password,
+    };
     try {
-      const response = await fetch("YOUR_API_ENDPOINT", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      toast.success("Success Notification !", {
-        position: toast.POSITION.TOP_CENTER,
-      });
-      console.log(data);
+      const resultAction = await addUser(data);
+      console.log(resultAction.data);
+      if (resultAction.data.statusCode === 200) {
+        toast.success("Registration Succesfull");
+        navigate("/login");
+      }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Registration failed:", error);
     }
   };
+
   return (
     <div className="h-96 mt-9 flex justify-center items-center">
       <div className="border-2 p-4 shadow-md rounded-md">

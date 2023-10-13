@@ -12,19 +12,34 @@ export const commentApi = createApi({
             })
         }),
         likeComment: builder.mutation({
-            query: ({ id, ...data }) => ({
-                url: `/like/${id}`,
+            query: ({ commentId, ...data }) => ({
+                url: `/like/${commentId}`,
                 method: "POST",
                 body: data
             })
         }),
         dislikeComment: builder.mutation({
-            query: ({ id, ...data }) => ({
-                url: `/dislike/${id}`,
+            query: ({ commentId, ...data }) => ({
+                url: `/dislike/${commentId}`,
                 method: "POST",
                 body: data
             })
-        })
+        }),
+        updateComment: builder.mutation({
+            query: ({ commentId, ...data }) => ({
+                url: `/update-comment/${commentId}`,
+                method: "PATCH",
+                body: data
+            })
+        }),
+        deleteComment: builder.mutation({
+            query: (id) => ({
+                url: `/delete-comment/${id}`,
+                method: "DELETE",
+            })
+        }),
 
     })
 })
+
+export const { useCommentAddMutation, useLikeCommentMutation, useDislikeCommentMutation, useUpdateCommentMutation, useDeleteCommentMutation } = commentApi;

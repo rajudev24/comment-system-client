@@ -17,9 +17,10 @@ export const userApi = createApi({
                 method: "POST",
                 body: data
             })
-        })
+        }),
+
 
     })
 })
 
-export const { useRegisterUserMutation, useLoginUserMutation } = userApi
+export const { useRegisterUserMutation, useLoginUserMutation } = userApi;
