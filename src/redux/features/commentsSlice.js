@@ -6,7 +6,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 export const fetchComments = createAsyncThunk('comments/fetchComments', async (queryParams, { rejectWithValue }) => {
     try {
         const { page, limit, sortBy, sortOrder } = queryParams;
-        const url = `http://localhost:5000/api/v1/comment?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+        const url = `https://comment-system-backend.vercel.app/api/v1/comment?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
         const response = await fetch(url);
         const data = await response.json(); // Parse the response body as JSON
         return data;

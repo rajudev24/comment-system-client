@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const userApi = createApi({
     reducerPath: 'userApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/v1/auth' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://comment-system-backend.vercel.app/api/v1/auth' }),
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (data) => ({
