@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-
+import { useSelector } from "react-redux";
 export default function CommentDetails({
   comment,
   userId,
@@ -12,6 +12,7 @@ export default function CommentDetails({
   setEditingComment,
   handleSubmitEdit,
 }) {
+  const user = useSelector((state) => state.user);
   const isCommentOwner = comment.author.id === userId;
   return (
     <div key={comment.id} className="bg-gray-300 p-2 m-1 rounded-md">
@@ -34,7 +35,7 @@ export default function CommentDetails({
       <button className="px-2" onClick={() => handleReply(comment.id)}>
         Reply
       </button>
-      {isCommentOwner && (
+      {isCommentOwner && user && (
         <button
           className="px-2 hover:text-blue-700"
           onClick={() => handleEdit(comment)}
@@ -42,7 +43,7 @@ export default function CommentDetails({
           Edit
         </button>
       )}
-      {isCommentOwner && (
+      {isCommentOwner && user && (
         <button
           className="px-2 hover:text-blue-700"
           onClick={() => handleDelete(comment.id)}

@@ -14,6 +14,7 @@ import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
 import CommentDetails from "./CommentDetails";
 import CommentFilter from "./CommentFIlter";
+import { useSelector } from "react-redux";
 
 export default function ShowComment(isNewComment) {
   const [editingComment, setEditingComment] = useState({ id: null, text: "" });
@@ -28,6 +29,7 @@ export default function ShowComment(isNewComment) {
   const totalPages = 5;
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const queryParams = {
@@ -59,34 +61,38 @@ export default function ShowComment(isNewComment) {
   };
 
   const handleLike = async (commentId) => {
-    const data = {
-      commentId,
-      userId,
-    };
-    try {
-      const resultAction = await likeComment(data);
-      if (resultAction.data.statusCode === 200) {
-        toast.success(resultAction.data.comment);
-        fetchCommentsData({ page: currentPage, limit: 3, sortBy, sortOrder });
+    if (user && userId) {
+      const data = {
+        commentId,
+        userId,
+      };
+      try {
+        const resultAction = await likeComment(data);
+        if (resultAction.data.statusCode === 200) {
+          toast.success(resultAction.data.comment);
+          fetchCommentsData({ page: currentPage, limit: 3, sortBy, sortOrder });
+        }
+      } catch (error) {
+        console.error("Like failed:", error);
       }
-    } catch (error) {
-      console.error("Like failed:", error);
     }
   };
 
   const handleDislike = async (commentId) => {
-    const data = {
-      commentId,
-      userId,
-    };
-    try {
-      const resultAction = await dislikeComment(data);
-      if (resultAction.data.statusCode === 200) {
-        toast.success(resultAction.data.comment);
-        fetchCommentsData({ page: currentPage, limit: 3, sortBy, sortOrder });
+    if (user && userId) {
+      const data = {
+        commentId,
+        userId,
+      };
+      try {
+        const resultAction = await dislikeComment(data);
+        if (resultAction.data.statusCode === 200) {
+          toast.success(resultAction.data.comment);
+          fetchCommentsData({ page: currentPage, limit: 3, sortBy, sortOrder });
+        }
+      } catch (error) {
+        console.error("Dislike failed:", error);
       }
-    } catch (error) {
-      console.error("Dislike failed:", error);
     }
   };
 
@@ -95,7 +101,9 @@ export default function ShowComment(isNewComment) {
   };
 
   const handleEdit = (comment) => {
-    setEditingComment({ id: comment.id, text: comment.text });
+    if (user && userId) {
+      setEditingComment({ id: comment.id, text: comment.text });
+    }
   };
 
   const handleSubmitEdit = async (e) => {
@@ -118,14 +126,16 @@ export default function ShowComment(isNewComment) {
   };
 
   const handleDelete = async (commentId) => {
-    try {
-      const resultAction = await deleteComment(commentId);
-      if (resultAction.data.statusCode === 200) {
-        toast.success(resultAction.data.comment);
-        fetchCommentsData({ page: currentPage, limit: 3, sortBy, sortOrder });
+    if (user && userId) {
+      try {
+        const resultAction = await deleteComment(commentId);
+        if (resultAction.data.statusCode === 200) {
+          toast.success(resultAction.data.comment);
+          fetchCommentsData({ page: currentPage, limit: 3, sortBy, sortOrder });
+        }
+      } catch (error) {
+        console.error("Dislike failed:", error);
       }
-    } catch (error) {
-      console.error("Dislike failed:", error);
     }
   };
 
